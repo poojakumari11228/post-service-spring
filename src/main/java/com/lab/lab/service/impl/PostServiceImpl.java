@@ -1,6 +1,7 @@
 package com.lab.lab.service.impl;
 
 import com.lab.lab.Util.Mapper;
+import com.lab.lab.Util.UtilMethods;
 import com.lab.lab.entity.User;
 import com.lab.lab.repo.UserRepo;
 import com.lab.lab.service.PostService;
@@ -42,8 +43,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void savePost(PostDto postDto) {
-        postRepo.save(modelMapper.map(postDto, Post.class));
+        System.out.println(postDto);
+        Optional<User> user = UtilMethods.getCurrentUser();
+        if (user.isPresent()) {
+            Post post = Mapper.convertPostDtoToPost(postDto, user.get());
+            postRepo.save(post);
+        }
     }
+
 
     @Override
     public void deleteById(long id) {
@@ -62,7 +69,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> findAllWithTitle(String title) {
-        System.out.println("***** "+ title);
+        System.out.println("***** " + title);
         return Mapper.convertPostListToPostDtoList(postRepo.findAllByTitle(title));
     }
 }

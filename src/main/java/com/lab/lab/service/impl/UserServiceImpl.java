@@ -15,6 +15,7 @@ import com.lab.lab.repo.UserRepo;
 import com.lab.lab.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,13 +29,15 @@ public class UserServiceImpl implements UserService {
     private final RoleRepo roleRepo;
     private final ModelMapper modelMapper;
     private final CommentRepo commentRepo;
+    private final BCryptPasswordEncoder bCryptPassEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, RoleRepo roleRepo, ModelMapper modelMapper, CommentRepo commentRepo) {
+    public UserServiceImpl(UserRepo userRepo, RoleRepo roleRepo, ModelMapper modelMapper, CommentRepo commentRepo, BCryptPasswordEncoder bCryptPassEncoder) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.modelMapper = modelMapper;
         this.commentRepo = commentRepo;
+        this.bCryptPassEncoder = bCryptPassEncoder;
     }
 
 
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(AddUserDto userDto) {
+        userDto.setPassword(bCryptPassEncoder.encode(userDto.getPassword()));
         User user = modelMapper.map(userDto, new User().getClass());
         Optional<Role> userRole = roleRepo.findByType("USER");
         if (userRole.isPresent())

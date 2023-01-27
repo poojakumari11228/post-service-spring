@@ -9,6 +9,7 @@ import com.lab.lab.entity.Post;
 import com.lab.lab.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -56,4 +57,7 @@ public class Mapper {
         return new CommentDto(comments.getId(), comments.getName(), comments.getText(), comments.getPost().getId());
     }
 
+    public static Post convertPostDtoToPost(PostDto postDto, User user) {
+      return new Post(postDto.getTitle(), postDto.getContent(), postDto.getAuthor(), user);
+    }
 }

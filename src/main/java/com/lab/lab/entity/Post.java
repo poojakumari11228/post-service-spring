@@ -14,6 +14,7 @@ import com.lab.lab.entity.User;
 import lombok.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -40,5 +41,11 @@ public class Post {
     List<Comment> comments;
 
 
+    public Post(String title, String content, String author, User user) {
+        this.title =title;
+        this.content = content;
+        this.author = author;
+        this.user = user;
+    }
 }
 
